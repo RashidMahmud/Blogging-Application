@@ -1,8 +1,9 @@
 import bcrypt from "bcryptjs";
 import prisma from "../../lib/prisma";
 import { ILoginUser } from "./auth.interface";
-import jwt from "jsonwebtoken";
+import jwt, { SignOptions } from "jsonwebtoken";
 import config from "../../config";
+import { jwtUtils } from "../../utils/jwt";
 
 const loginUser = async (payload: ILoginUser) => {
   const { email, password } = payload;
@@ -22,12 +23,24 @@ const loginUser = async (payload: ILoginUser) => {
     role: user.role,
   };
 
-  const accessToken = jwt.sign(jwtPayload, config.jwt_access_secret, {
-    expiresIn: "1d",
-  });
-  const refreshToken = jwt.sign(jwtPayload, "refresh_secret", {
-    expiresIn: "7d",
-  });
+  // const accessToken = jwt.sign(jwtPayload, config.jwt_access_secret, {
+  //   expiresIn: config.jwt_access_expires_in,
+  // } as SignOptions);
+  const accessToken = jwtUtils.createToken(
+    jwtPayload,
+    config.jwt_access_secret,
+    config.jwt_access_expires_in as SignOptions,
+  );
+
+  // const refreshToken = jwt.sign(jwtPayload, config.jwt_refresh_secret, {
+  //   expiresIn: config.jwt_refresh_expires_in,
+  // } as SignOptions);
+  const refreshToken = jwtUtils.createToken(
+    jwtPayload,
+    config.jwt_refresh_secret,
+    config.jwt_refresh_expires_in as SignOptions,
+  );
+
   return {
     accessToken,
     refreshToken,
