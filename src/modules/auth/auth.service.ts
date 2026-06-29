@@ -38,7 +38,10 @@ const loginUser = async (payload: ILoginUser) => {
       expiresIn: "7d",
     },
   );
-  return user;
+  return {
+    accessToken,
+    refreshToken,
+  };
 };
 
 export const authService = {
