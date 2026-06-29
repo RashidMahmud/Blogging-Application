@@ -4,8 +4,8 @@ import config from "../../config";
 import { RegisterUserPayload } from "./user.interface";
 
 const registerUserIntoDB = async (payload: RegisterUserPayload) => {
-    const { name, email, password, profilePhoto } = payload;
-    const isUserExists = await prisma.user.findUnique({
+  const { name, email, password, profilePhoto } = payload;
+  const isUserExists = await prisma.user.findUnique({
     where: { email },
   });
   if (isUserExists) {
@@ -23,8 +23,8 @@ const registerUserIntoDB = async (payload: RegisterUserPayload) => {
       profile: {
         create: {
           profilePhoto,
-      }
-      }
+        },
+      },
     },
   });
   // await prisma.profile.create({
@@ -45,9 +45,12 @@ const registerUserIntoDB = async (payload: RegisterUserPayload) => {
       profile: true,
     },
   });
-    return user;
-}
+  return user;
+};
+
+const getMyProfileFromDB = async () => {};
 
 export const UserService = {
-    registerUserIntoDB,
-}
+  registerUserIntoDB,
+  getMyProfileFromDB
+};
