@@ -27,8 +27,8 @@ const registerUser = catchAsync(
 
 const getMyProfile = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const cookies = req.cookies;
-    console.log(cookies);
+    const { accessToken } = req.cookies;
+    console.log(accessToken);
     res.send("Get My Profile");
   },
 );
