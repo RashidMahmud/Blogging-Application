@@ -5,6 +5,7 @@ import { catchAsync } from "../../utils/catchAsync";
 import { sendResponse } from "../../utils/sendResponse";
 import jwt from "jsonwebtoken";
 import config from "../../config";
+import { jwtUtils } from "../../utils/jwt";
 
 const registerUser = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -34,7 +35,10 @@ const getMyProfile = catchAsync(
     // console.log("Cookies:", req.cookies);
     // console.log("Access Token:", req.cookies.accessToken);
 
-    const verifiedToken = jwt.verify(accessToken, config.jwt_access_secret);
+    const verifiedToken = jwtUtils.verifyToken(
+      accessToken,
+      config.jwt_access_secret,
+    );
 
     console.log(verifiedToken);
 
