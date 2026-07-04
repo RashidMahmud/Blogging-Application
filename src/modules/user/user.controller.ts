@@ -40,12 +40,17 @@ const getMyProfile = catchAsync(
       config.jwt_access_secret,
     );
     if (typeof verifiedToken === "string") {
-      throw new Error("Invalid token");
+      throw new Error(verifiedToken);
     }
 
     const profile = await UserService.getMyProfileFromDB(verifiedToken.id);
 
-    res.send("Get My Profile");
+    sendResponse(res, {
+      success: true,
+      statuscode: httpStatus.OK,
+      message: "User profile fetched successfully",
+      data: { profile },
+    });
   },
 );
 
