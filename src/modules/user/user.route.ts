@@ -1,4 +1,4 @@
-import { Router, Request, Response } from "express";
+import { Router, Request, Response, NextFunction } from "express";
 import { userController } from "./user.controller";
 
 const router = Router();
@@ -6,12 +6,9 @@ const router = Router();
 router.post("/register", userController.registerUser);
 router.get(
   "/me",
-  (req: Request, res: Response) => {
-    res.status(200).json({
-        success: true,
-        statuscode: 200,
-        message: "User profile fetched successfully",
-    });
+  (req: Request, res: Response, next: NextFunction) => {
+    console.log(req.cookies);
+    next();
   },
   userController.getMyProfile,
 );
