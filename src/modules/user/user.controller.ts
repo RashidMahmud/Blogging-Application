@@ -32,8 +32,6 @@ const getMyProfile = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const { accessToken } = req.cookies;
     console.log(accessToken);
-    // console.log("Cookies:", req.cookies);
-    // console.log("Access Token:", req.cookies.accessToken);
 
     const verifiedToken = jwtUtils.verifyToken(
       accessToken,
