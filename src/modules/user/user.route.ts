@@ -25,11 +25,10 @@ const router = Router();
 router.post("/register", userController.registerUser);
 const auth = (...requiredRoles: Role[]) => {
   return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const token =
-      req.cookies.accessToken ||
-      req.headers.authorization?.startsWith("Bearer ")
-        ? req.headers.authorization?.split(" ")[1]
-        : req.headers.authorization;
+    const token = req.cookies.accessToken;
+    // || req.headers.authorization?.startsWith("Bearer ")
+    //   ? req.headers.authorization?.split(" ")[1]
+    //   : req.headers.authorization;
 
     if (!token) {
       throw new Error(
@@ -55,32 +54,6 @@ const auth = (...requiredRoles: Role[]) => {
     if (user.activeStatus === "BLOCKED") {
       throw new Error("Your account has been blocked. Please contact support.");
     }
-  });
-};
-router.get(
-  "/me",
-  (req: Request, res: Response, next: NextFunction) => {
-    console.log(req.cookies);
-    const { accessToken } = req.cookies;
-    console.log(accessToken);
-
-    const verifiedToken = jwtUtils.verifyToken(
-      accessToken,
-      config.jwt_access_secret,
-    );
-    if (!verifiedToken.success) {
-      throw new Error(verifiedToken.message);
-    }
-    const { email, name, id, role } = verifiedToken.data as JwtPayload;
-    const requiredRoles = [Role.ADMIN, Role.USER, Role.AUTHOR];
-    if (!requiredRoles.includes(role)) {
-      return res.status(403).json({
-        success: false,
-        statuscode: httpStatus.FORBIDDEN,
-        message:
-          "Forbidden. You do not have permission to access this resource",
-      });
-    }
     req.user = {
       email,
       name,
@@ -88,7 +61,42 @@ router.get(
       role,
     };
     next();
-  },
+  });
+};
+router.get(
+  "/me",
+  // (req: Request, res: Response, next: NextFunction) => {
+  //   console.log(req.cookies);
+  //   const { accessToken } = req.cookies;
+  //   console.log(accessToken);
+
+  //   const verifiedToken = jwtUtils.verifyToken(
+  //     accessToken,
+  //     config.jwt_access_secret,
+  //   );
+  //   if (!verifiedToken.success) {
+  //     throw new Error(verifiedToken.message);
+  //   }
+  //   const { email, name, id, role } = verifiedToken.data as JwtPayload;
+  //   const requiredRoles = [Role.ADMIN, Role.USER, Role.AUTHOR];
+  //   if (!requiredRoles.includes(role)) {
+  //     return res.status(403).json({
+  //       success: false,
+  //       statuscode: httpStatus.FORBIDDEN,
+  //       message:
+  //         "Forbidden. You do not have permission to access this resource",
+  //     });
+  //   }
+  //   req.user = {
+  //     email,
+  //     name,
+  //     id,
+  //     role,
+  //   };
+  //   next();
+  // },
+
+  auth(Role.ADMIN, Role.USER, Role.AUTHOR),
   userController.getMyProfile,
 );
 
