@@ -76,11 +76,12 @@ const updateMyProfileInDB = async (userId: string, payload: any) => {
   omit:{password: true},
   include: {
     profile: true,
-
 }})
+return updatedUser;
 };
 
 export const UserService = {
   registerUserIntoDB,
   getMyProfileFromDB,
+  updateMyProfileInDB,
 };
