@@ -4,6 +4,7 @@ import config from "../../config";
 import { jwtUtils } from "../../utils/jwt";
 import { Role } from "../../../generated/prisma/client";
 import httpStatus from "http-status";
+import { catchAsync } from "../../utils/catchAsync";
 declare global {
   namespace Express {
     interface Request {
@@ -20,6 +21,11 @@ declare global {
 const router = Router();
 
 router.post("/register", userController.registerUser);
+const auth = () => {
+  return catchAsync(
+    async (req: Request, res: Response, next: NextFunction) => {},
+  );
+};
 router.get(
   "/me",
   (req: Request, res: Response, next: NextFunction) => {
