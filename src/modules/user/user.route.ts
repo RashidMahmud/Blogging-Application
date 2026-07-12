@@ -41,7 +41,7 @@ const auth = (...requiredRoles: Role[]) => {
       throw new Error(verifiedToken.message);
     }
     const { email, name, id, role } = verifiedToken.data as JwtPayload;
-    if (!requiredRoles.includes(role)) {
+    if (requiredRoles.length && !requiredRoles.includes(role)) {
       throw new Error(
         "Forbidden. You do not have permission to access this resource.",
       );
