@@ -22,9 +22,19 @@ const router = Router();
 
 router.post("/register", userController.registerUser);
 const auth = () => {
-  return catchAsync(
-    async (req: Request, res: Response, next: NextFunction) => {},
-  );
+  return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const token =
+      req.cookies.accessToken ||
+      req.headers.authorization?.startsWith("Bearer ")
+        ? req.headers.authorization?.split(" ")[1]
+        : req.headers.authorization;
+
+    if (!token) {
+      throw new Error(
+        "You are not logged in! Please log in to get access this resource.",
+      );
+    }
+  });
 };
 router.get(
   "/me",
