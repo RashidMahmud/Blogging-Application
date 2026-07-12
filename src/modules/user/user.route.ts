@@ -6,6 +6,7 @@ import { Role } from "../../../generated/prisma/client";
 import httpStatus from "http-status";
 import { catchAsync } from "../../utils/catchAsync";
 import { JwtPayload } from "jsonwebtoken";
+import prisma from "../../lib/prisma";
 declare global {
   namespace Express {
     interface Request {
@@ -40,6 +41,20 @@ const auth = (...requiredRoles: Role[]) => {
       throw new Error(verifiedToken.message);
     }
     const { email, name, id, role } = verifiedToken.data as JwtPayload;
+    if (!requiredRoles.includes(role)) {
+      throw new Error(
+        "Forbidden. You do not have permission to access this resource.",
+      );
+    }
+    const user = await prisma.user.findUnique({
+      where: { id, email, name, role },
+    });
+    if (!user) {
+      throw new Error("User not found. Please log in again.");
+    }
+    if (user.activeStatus === "BLOCKED") {
+      throw new Error("Your account has been blocked. Please contact support.");
+    }
   });
 };
 router.get(
