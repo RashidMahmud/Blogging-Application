@@ -4,6 +4,18 @@ import config from "../../config";
 import { jwtUtils } from "../../utils/jwt";
 import { Role } from "../../../generated/prisma/client";
 import httpStatus from "http-status";
+declare global {
+  namespace Express {
+    interface Request {
+      user?: {
+        email: string;
+        name: string;
+        id: string;
+        role: Role;
+      };
+    }
+  }
+}
 
 const router = Router();
 
@@ -24,13 +36,21 @@ router.get(
     }
     const { email, name, id, role } = verifiedToken;
     const requiredRoles = [Role.ADMIN, Role.USER, Role.AUTHOR];
-    if (!requiredRoles.includes(role)){
-        return res.status(403).json({
-            success: false,
-            statuscode: httpStatus.FORBIDDEN,
-            message: "Forbidden. You do not have permission to access this resource",
-        });
-    } next();
+    if (!requiredRoles.includes(role)) {
+      return res.status(403).json({
+        success: false,
+        statuscode: httpStatus.FORBIDDEN,
+        message:
+          "Forbidden. You do not have permission to access this resource",
+      });
+    }
+    req.user = {
+      email,
+      name,
+      id,
+      role,
+    };
+    next();
   },
   userController.getMyProfile,
 );
