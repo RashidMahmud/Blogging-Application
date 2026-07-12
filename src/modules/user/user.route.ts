@@ -5,6 +5,7 @@ import { jwtUtils } from "../../utils/jwt";
 import { Role } from "../../../generated/prisma/client";
 import httpStatus from "http-status";
 import { catchAsync } from "../../utils/catchAsync";
+import { JwtPayload } from "jsonwebtoken";
 declare global {
   namespace Express {
     interface Request {
@@ -21,7 +22,7 @@ declare global {
 const router = Router();
 
 router.post("/register", userController.registerUser);
-const auth = () => {
+const auth = (...requiredRoles: Role[]) => {
   return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const token =
       req.cookies.accessToken ||
@@ -35,6 +36,10 @@ const auth = () => {
       );
     }
     const verifiedToken = jwtUtils.verifyToken(token, config.jwt_access_secret);
+    if (!verifiedToken.success) {
+      throw new Error(verifiedToken.message);
+    }
+    const { email, name, id, role } = verifiedToken.data as JwtPayload;
   });
 };
 router.get(
@@ -48,10 +53,10 @@ router.get(
       accessToken,
       config.jwt_access_secret,
     );
-    if(!verifiedToken.success) {
+    if (!verifiedToken.success) {
       throw new Error(verifiedToken.message);
     }
-    const { email, name, id, role } = verifiedToken.data;
+    const { email, name, id, role } = verifiedToken.data as JwtPayload;
     const requiredRoles = [Role.ADMIN, Role.USER, Role.AUTHOR];
     if (!requiredRoles.includes(role)) {
       return res.status(403).json({
