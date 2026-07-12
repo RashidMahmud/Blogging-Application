@@ -54,7 +54,12 @@ const getMyProfile = catchAsync(
   },
 );
 
+const updateMyProfile = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {})
+    
+
 export const userController = {
   registerUser,
   getMyProfile,
+  updateMyProfile,
 };
