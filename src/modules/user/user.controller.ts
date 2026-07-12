@@ -30,8 +30,8 @@ const registerUser = catchAsync(
 
 const getMyProfile = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const { accessToken } = req.cookies;
-    console.log(req.user, "user request");
+    // const { accessToken } = req.cookies;
+    // console.log(req.user, "user request");
 
     // const verifiedToken = jwtUtils.verifyToken(
     //   accessToken,
