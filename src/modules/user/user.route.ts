@@ -34,6 +34,7 @@ const auth = () => {
         "You are not logged in! Please log in to get access this resource.",
       );
     }
+    const verifiedToken = jwtUtils.verifyToken(token, config.jwt_access_secret);
   });
 };
 router.get(
@@ -47,10 +48,10 @@ router.get(
       accessToken,
       config.jwt_access_secret,
     );
-    if (typeof verifiedToken === "string") {
-      throw new Error(verifiedToken);
+    if(!verifiedToken.success) {
+      throw new Error(verifiedToken.message);
     }
-    const { email, name, id, role } = verifiedToken;
+    const { email, name, id, role } = verifiedToken.data;
     const requiredRoles = [Role.ADMIN, Role.USER, Role.AUTHOR];
     if (!requiredRoles.includes(role)) {
       return res.status(403).json({
