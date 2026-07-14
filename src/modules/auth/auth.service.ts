@@ -50,7 +50,7 @@ const loginUser = async (payload: ILoginUser) => {
   };
 };
 
-const refreshToken = async () => {};
+const refreshToken = async (refreshToken: string) => {};
 
 export const authService = {
   loginUser,
