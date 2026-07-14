@@ -32,6 +32,10 @@ const loginUser = catchAsync(
   },
 );
 
+const refreshToken = catchAsync(async () => {
+  
+})
+
 export const authController = {
   loginUser,
 };
