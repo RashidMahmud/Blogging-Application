@@ -32,10 +32,11 @@ const loginUser = catchAsync(
   },
 );
 
-const refreshToken = catchAsync(async () => {
-  
+const refreshToken = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+
 })
 
 export const authController = {
   loginUser,
+  refreshToken,
 };
