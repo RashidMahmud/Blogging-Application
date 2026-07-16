@@ -273,7 +273,7 @@ const getPostsStats = async () => {
       }),
       await tx.comment.count({
         where: {
-          status: CommentStatus.REJECT,
+          status: CommentStatus.REJECTED,
         },
       }),
       await tx.post.aggregate({
