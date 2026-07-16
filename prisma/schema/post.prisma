@@ -12,4 +12,5 @@ model Post{
     updatedAt DateTime @updatedAt
 
     @@map("posts")
+    comments Comment[]
 }

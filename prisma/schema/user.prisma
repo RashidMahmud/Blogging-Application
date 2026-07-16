@@ -10,5 +10,6 @@ model User {
     profile Profile?
 
     @@map("users")
+    comments Comment[]
 }
 
