@@ -1,13 +1,18 @@
-import { CommentStatus, PostStatus } from "../../../generated/prisma/enums"
+import { CommentStatus, PostStatus } from "../../../generated/prisma/enums";
 import prisma from "../../lib/prisma";
 import { ICreatePostPayload, IUpdatePostPayload } from "./post.interface";
 
 const createPost = async (payload: ICreatePostPayload, userId: string) => {
   const result = await prisma.post.create({
     data: {
-      ...payload,
-      authorId: userId
-    }
+      tittle: payload.title,
+      content: payload.content,
+      thumbnail: payload.thumbnail,
+      isFeatured: payload.isFeatured,
+      status: payload.status,
+      tags: payload.tags,
+      authorId: userId,
+    },
   });
 
   return result;
