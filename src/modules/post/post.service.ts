@@ -6,8 +6,8 @@ const createPost = async (payload: ICreatePostPayload, userId: string) => {
   const result = await prisma.post.create({
     data: {
       ...payload,
-      authorId: userId,
-    },
+      authorId: userId
+    }
   });
 
   return result;
